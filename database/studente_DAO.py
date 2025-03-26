@@ -1,10 +1,8 @@
 # Add whatever it is needed to interface with the DB Table studente
 from flet_core import row
-
 from model.studente import Studente
 from database.DB_connect import DBConnect
 
-# questo file si interfaccia direttamente con il database
 
 class studente_DAO:
     def __init__(self):

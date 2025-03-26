@@ -6,6 +6,14 @@ class iscrizione_DAO:
         self.dbConnect = DBConnect()
 
     def getIscrizioneDAO(self, matricola, codins):
+        '''
+        Ricerca l'iscrizione di uno studente a un corso
+        :param matricola: matricola di uno studente
+        :param codins: codice di un corso
+        :return:
+        False se non trova un'iscrizione, quindi posso inserirne una nuova
+        True se trova un'iscrizione, quindi lo studente è già iscritto al corso
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """
@@ -15,11 +23,17 @@ class iscrizione_DAO:
         cursor.execute(query, (matricola, codins))
         row = cursor.fetchall()
         if len(row) == 0:
-            return False # posso inserire un nuova iscrizione
+            return False
         else:
-            return True # lo studente è già iscritto al corso
+            return True
 
     def iscrizioneDAO(self, matricola, codins):
+        '''
+        Inserisce una nuova iscrizione di uno studente a un corso
+        :param matricola: matricola di uno studente
+        :param codins: codice di un corso
+        :return: tupla di matricola dello studente e codice del corso
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """

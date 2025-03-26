@@ -8,10 +8,11 @@ class corso_DAO:
     def __init__(self):
         self.dbConnect = DBConnect()
 
-# questo file si interfaccia direttamente con il database
-# funzione get corsi che andrà sulla tabella corsi e ne prenderà i dati quindi la query sarà select * ecc
-# il risultato di questa funzione è un oggetto di tipo Corso che definisco in model
     def getCorsi(self):
+        '''
+        Ricerca tutti i corsi salvati nel database
+        :return: una lista di corsi
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """
@@ -27,6 +28,11 @@ class corso_DAO:
         return self._listaCorsi
 
     def getCorsiDelloStudente(self, matricola):
+        '''
+        Ricerca tutti i corsi a cui è iscritto uno studente
+        :param matricola: matricola di uno studente
+        :return: lista dei corsi a cui è iscritto lo studente
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """
@@ -41,6 +47,3 @@ class corso_DAO:
             self._listaCorsiDelloStudente.append(c)
         cnx.close()
         return self._listaCorsiDelloStudente
-
-# le funzioni definite qui saranno "chiamabili" dal modello
-

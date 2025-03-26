@@ -9,11 +9,20 @@ class Controller:
         self._model = model
 
     def fillCorsi(self):
+        '''
+        Riempie il dropDown con la lista di corsi ottenuta dalla ricerca sul database
+        :return: aggiorna la view
+        '''
         for corso in self._model.getCorsiDalDAO():
             self._view._dd_corso.options.append(ft.dropdown.Option(key = corso._codins, text = corso.__str__()))
         self._view.update_page()
 
     def handle_inserimentoProibito(self, e):
+        '''
+        Se si prova a inserire un nome o un cognome viene visualizzato un messaggio di alert.
+        :param e:
+        :return:
+        '''
         self._view.create_alert("Attenzione! Inserire una matricola.")
         self._view._txt_matricola.focus()
 
@@ -26,6 +35,9 @@ class Controller:
             return
         iscrittiAlCorso = self._model.getStudenteIscrittoAlCorsoDalDAO(corsoScelto)
         self._view.txt_result.controls.clear()
+        self._view._txt_matricola.value = ""
+        self._view._txt_nome.value = ""
+        self._view._txt_cognome.value = ""
         self._view.txt_result.controls.append(ft.Text(f"Ci sono {len(iscrittiAlCorso)} iscritti al corso.",
                                                       italic=True,
                                                       weight=ft.FontWeight.BOLD))
@@ -41,6 +53,7 @@ class Controller:
             return
         self._view._txt_nome.value = studenteTrovato._nome
         self._view._txt_cognome.value = studenteTrovato._cognome
+        self._view._dd_corso.value = ""
         self._view.update_page()
 
     def handle_cercaCorsi(self, e):
@@ -50,6 +63,7 @@ class Controller:
             return
         listaCorsiDelloStudente = self._model.getCorsiDelloStudenteDalDAO(matricola)
         self._view.txt_result.controls.clear()
+        self._view._dd_corso.value = ""
         self._view.txt_result.controls.append(ft.Text(f"Lo studente selezionato è iscritto a {len(listaCorsiDelloStudente)} corsi:",
                                                       italic=True,
                                                       weight=ft.FontWeight.BOLD))
@@ -76,7 +90,21 @@ class Controller:
         matricola = self._view._txt_matricola.value
         if matricola is None or matricola == "":
             self._view.create_alert("Selezionare un matricola!")
+            self._view._txt_nome.value = ""
+            self._view._txt_cognome.value = ""
+            self._view.update_page()
             return
+        if self._model.getStudenteInBaseAllaMatricolaDalDAO(matricola) is None:
+            self._view.create_alert("Attenzione! La matricola inserita è inesistente.")
+            self._view._txt_nome.value = ""
+            self._view._txt_cognome.value = ""
+            self._view.update_page()
+            return
+        studenteTrovato = self._model.getStudenteInBaseAllaMatricolaDalDAO(matricola)
+        self._view._txt_nome.value = studenteTrovato._nome
+        self._view._txt_cognome.value = studenteTrovato._cognome
+        self._view._dd_corso.value = ""
+        self._view.update_page()
         iscrizionePossibile = self._model.getIscrizioneDelloStudenteAlCorsoDalDAO(matricola, corsoScelto)
         if iscrizionePossibile is True:
             self._view.txt_result.controls.clear()
@@ -85,9 +113,14 @@ class Controller:
         else:
             nuovaIscrizione = self._model.iscrizioneStudenteACorsoInDAO(matricola, corsoScelto)
             self._view.txt_result.controls.clear()
-            self._view.txt_result.controls.append(ft.Text(f"Iscrizione effettuata con successo!",
-                                                          italic=True,
-                                                          weight=ft.FontWeight.BOLD))
+            row = ft.Row([ft.Text(f"Iscrizione effettuata con successo!",
+                                  italic=True,
+                                  color = "green",
+                                  weight=ft.FontWeight.BOLD),
+                          ft.Icon(ft.icons.CHECK_CIRCLE_ROUNDED,
+                                  color="green",
+                                  size=30)])
+            self._view.txt_result.controls.append(row)
             self._view.txt_result.controls.append(ft.Text(f"Lo studente con matricola {matricola} risulta iscritto al corso con codice {corsoScelto}"))
             self._view.update_page()
 
