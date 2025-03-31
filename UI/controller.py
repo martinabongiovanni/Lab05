@@ -51,6 +51,7 @@ class Controller:
         if matricola is None or matricola == "" or studenteTrovato is None:
             self._view.create_alert("Selezionare un matricola!")
             return
+        self._view.txt_result.controls.clear()
         self._view._txt_nome.value = studenteTrovato._nome
         self._view._txt_cognome.value = studenteTrovato._cognome
         self._view._dd_corso.value = ""
@@ -121,6 +122,6 @@ class Controller:
                                   color="green",
                                   size=30)])
             self._view.txt_result.controls.append(row)
-            self._view.txt_result.controls.append(ft.Text(f"Lo studente con matricola {matricola} risulta iscritto al corso con codice {corsoScelto}"))
+            self._view.txt_result.controls.append(ft.Text(f"Lo studente con matricola {matricola} risulta correttamente iscritto al corso con codice {corsoScelto}"))
             self._view.update_page()
 

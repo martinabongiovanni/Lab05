@@ -9,6 +9,11 @@ class studente_DAO:
         self.dbConnect = DBConnect()
 
     def getStudenteDAOInBaseAlCorso(self, codins):
+        '''
+        Ricerca tutti gli studenti iscritto a un corso.
+        :param codins: codice del corso di cui si vuole conoscere il numero di iscritti
+        :return: lista di studenti
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """
@@ -25,6 +30,11 @@ class studente_DAO:
         return self._listaStudentiIscrittiAlCorso
 
     def getStudenteDAOInBaseAllaMatricola(self, matricola):
+        '''
+        Ricerca di uno studente
+        :param matricola: matricola dello studente da cercare
+        :return: si visualizzerà nell'interfaccia nome e cognome dello studente trovato
+        '''
         cnx = self.dbConnect.get_connection()
         cursor = cnx.cursor()
         query = """

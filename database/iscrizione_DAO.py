@@ -40,4 +40,5 @@ class iscrizione_DAO:
                     INSERT INTO iscrizione
                     VALUES (%s, %s)"""
         cursor.execute(query, (matricola, codins))
+        cnx.commit()
         return (matricola, codins)
